@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using QuickGraph.Collections;
 using System.Linq;
+using System.Reflection;
 
 namespace QuickGraph
 {
@@ -100,7 +101,7 @@ this
             where TEdge : IEdge<TVertex>
         {
             Contract.Requires(path != null);
-            Contract.Requires(typeof(TEdge).IsValueType || Enumerable.All(path, e => e != null));
+            Contract.Requires(typeof(TEdge).GetTypeInfo().IsValueType || Enumerable.All(path, e => e != null));
 
             bool first = true;
             TVertex lastTarget = default(TVertex);
@@ -131,7 +132,7 @@ this
             where TEdge : IEdge<TVertex>
         {
             Contract.Requires(path != null);
-            Contract.Requires(typeof(TEdge).IsValueType || Enumerable.All(path, e => e != null));
+            Contract.Requires(typeof(TEdge).GetTypeInfo().IsValueType || Enumerable.All(path, e => e != null));
 
             var vertices = new Dictionary<TVertex, int>();
             bool first = true;
@@ -165,7 +166,7 @@ this
             where TEdge : IEdge<TVertex>
         {
             Contract.Requires(path != null);
-            Contract.Requires(typeof(TEdge).IsValueType || Enumerable.All(path, e => e != null));
+            Contract.Requires(typeof(TEdge).GetTypeInfo().IsValueType || Enumerable.All(path, e => e != null));
             Contract.Requires(IsPath<TVertex, TEdge>(path));
 
             var vertices = new Dictionary<TVertex, int>();
@@ -240,7 +241,7 @@ this
             Contract.Requires(root != null);
             Contract.Requires(vertex != null);
             Contract.Requires(
-                typeof(TEdge).IsValueType || 
+                typeof(TEdge).GetTypeInfo().IsValueType || 
                 Enumerable.All(predecessors.Values, e => e != null));
 
             var current = vertex;
@@ -282,12 +283,12 @@ this
             Contract.Requires(predecessors != null);
             Contract.Requires(v != null);
             Contract.Requires(
-                typeof(TEdge).IsValueType ||
+                typeof(TEdge).GetTypeInfo().IsValueType ||
                 Enumerable.All(predecessors.Values, e => e != null));
             Contract.Ensures(
                 !Contract.Result<bool>() ||
                 (Contract.ValueAtReturn<IEnumerable<TEdge>>(out result) != null &&
-                 (typeof(TEdge).IsValueType ||
+                 (typeof(TEdge).GetTypeInfo().IsValueType ||
                  Enumerable.All(
                     Contract.ValueAtReturn<IEnumerable<TEdge>>(out result),
                     e => e != null))
@@ -328,7 +329,7 @@ this
         public static EdgeEqualityComparer<TVertex, TEdge> GetUndirectedVertexEquality<TVertex, TEdge>()
             where TEdge : IEdge<TVertex>
         {
-            if (typeof(IUndirectedEdge<TVertex>).IsAssignableFrom(typeof(TEdge)))
+            if (typeof(IUndirectedEdge<TVertex>).GetTypeInfo().IsAssignableFrom(typeof(TEdge).GetTypeInfo()))
                 return new EdgeEqualityComparer<TVertex, TEdge>(SortedVertexEquality<TVertex, TEdge>);
             else
                 return new EdgeEqualityComparer<TVertex, TEdge>(UndirectedVertexEquality<TVertex, TEdge>);

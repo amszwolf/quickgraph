@@ -21,10 +21,10 @@ namespace QuickGraph.Graphviz
        /// <returns></returns>
        public static string WrapSvg(string svgFileName)
        {
-           using (var reader = new StreamReader(svgFileName))
+           using (var fs = new FileStream(svgFileName, FileMode.Open))
+           using (var reader = new StreamReader(fs))
            {
                var size = ParseSize(reader.ReadToEnd());
-               reader.Close();
                return DumpHtml(size, svgFileName);
            }
        }
@@ -45,7 +45,8 @@ namespace QuickGraph.Graphviz
        public static string DumpHtml(GraphvizSize size, string svgFileName)
        {
            string outputFile = String.Format("{0}.html",svgFileName);
-           using (var html = new StreamWriter(outputFile))
+           using (var fs = new FileStream(outputFile, FileMode.Create))
+           using (var html = new StreamWriter(fs))
            {
                html.WriteLine("<html>");
                html.WriteLine("<body>");

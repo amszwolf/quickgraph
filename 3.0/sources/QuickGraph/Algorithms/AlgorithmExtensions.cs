@@ -37,8 +37,8 @@ namespace QuickGraph.Algorithms
             Contract.Ensures(Contract.Result<Func<TKey, TValue>>() != null);
 
 #if!SILVERLIGHT
-            var method = dictionary.GetType().GetProperty("Item").GetGetMethod();
-            return (Func<TKey, TValue>)Delegate.CreateDelegate(typeof(Func<TKey, TValue>), dictionary, method, true);
+            var method = dictionary.GetType().GetRuntimeProperty("Item").GetMethod;
+            return (Func<TKey, TValue>)method.CreateDelegate(typeof(Func<TKey, TValue>), dictionary);
 #else
             return key => dictionary[key];
 #endif
@@ -63,24 +63,13 @@ this
             Contract.Requires(graph != null);
 
             // simpler identity for primitive types
-            switch(Type.GetTypeCode(typeof(TVertex)))
-            {
-                case TypeCode.String:
-                case TypeCode.Boolean:
-                case TypeCode.Byte:
-                case TypeCode.Char:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.SByte:
-                case TypeCode.Single:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                    return (v) => v.ToString();
-            }
+            var type = typeof(TVertex);
+            if (type == typeof(Boolean) || (type == typeof(Byte)) || (type == typeof(Char)) ||
+                (type == typeof(UInt16)) || (type == typeof(UInt32)) || (type == typeof(UInt64)) ||
+                (type == typeof(SByte)) || (type == typeof(Int16)) || (type == typeof(Int32)) ||
+                (type == typeof(Int64)) || (type == typeof(String)) || (type == typeof(Single)) ||
+                (type == typeof(Double)) || (type == typeof(DateTime)) || (type == (typeof(Decimal))))
+                return (v) => v.ToString();
 
             // create dictionary
             var ids = new Dictionary<TVertex, string>(graph.VertexCount);

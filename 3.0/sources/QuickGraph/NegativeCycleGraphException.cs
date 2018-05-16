@@ -13,11 +13,5 @@ namespace QuickGraph
         public NegativeCycleGraphException() { }
         public NegativeCycleGraphException(string message) : base(message) { }
         public NegativeCycleGraphException(string message, Exception inner) : base(message, inner) { }
-#if !SILVERLIGHT
-        protected NegativeCycleGraphException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
-#endif
     }
 }

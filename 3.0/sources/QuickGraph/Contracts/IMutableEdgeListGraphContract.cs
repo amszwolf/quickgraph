@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 
 namespace QuickGraph.Contracts
 {
@@ -34,7 +35,7 @@ namespace QuickGraph.Contracts
         {
             IMutableEdgeListGraph<TVertex, TEdge> ithis = this;
             Contract.Requires(edges != null);
-            Contract.Requires(typeof(TEdge).IsValueType || Enumerable.All(edges, edge => edge != null));
+            Contract.Requires(typeof(TEdge).GetTypeInfo().IsValueType || Enumerable.All(edges, edge => edge != null));
             Contract.Requires(Enumerable.All(edges, edge =>
                 ithis.ContainsVertex(edge.Source) &&
                 ithis.ContainsVertex(edge.Target)

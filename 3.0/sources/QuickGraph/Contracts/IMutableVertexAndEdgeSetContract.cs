@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 
 namespace QuickGraph.Contracts
 {
@@ -26,7 +27,7 @@ namespace QuickGraph.Contracts
         {
             IMutableVertexAndEdgeSet<TVertex, TEdge> ithis = this;
             Contract.Requires(edges != null);
-            Contract.Requires(typeof(TEdge).IsValueType || Enumerable.All(edges, edge => edge != null));
+            Contract.Requires(typeof(TEdge).GetTypeInfo().IsValueType || Enumerable.All(edges, edge => edge != null));
             Contract.Ensures(ithis.EdgeCount == Contract.OldValue(ithis.EdgeCount) + Contract.Result<int>());
 
             return default(int);

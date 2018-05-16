@@ -30,12 +30,6 @@ namespace QuickGraph.Collections
             : base(capacity, vertexComparer)
         { }
 
-#if !SILVERLIGHT
-        public VertexEdgeDictionary(
-            SerializationInfo info, StreamingContext context) 
-            : base(info, context) { }
-#endif
-
         public VertexEdgeDictionary<TVertex, TEdge> Clone()
         {
             var clone = new VertexEdgeDictionary<TVertex, TEdge>(this.Count);
@@ -54,6 +48,11 @@ namespace QuickGraph.Collections
         {
             return this.Clone();
         }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+        }
 #endif
+
     }
 }
